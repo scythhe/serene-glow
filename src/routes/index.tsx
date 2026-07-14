@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -77,6 +77,31 @@ const reviews = [
   },
 ];
 
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    el.querySelectorAll<HTMLElement>("[data-reveal]").forEach((n) => {
+      n.classList.add("reveal");
+      io.observe(n);
+    });
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
 function Index() {
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -89,6 +114,7 @@ function Index() {
       <Testimonials />
       <Booking />
       <Footer />
+      <FloatingCTA />
     </main>
   );
 }
@@ -104,13 +130,14 @@ function Nav() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border py-4"
+          ? "bg-background/70 backdrop-blur-2xl border-b border-ember/20 py-3"
           : "bg-transparent py-6"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#top" className="font-display text-xl tracking-widest text-cream uppercase">
-          Premier<span className="text-ember">·</span>Spa
+        <a href="#top" className="font-display text-xl tracking-[0.2em] text-cream uppercase flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-ember shadow-[0_0_12px_var(--ember)] animate-pulse" />
+          Premier<span className="text-gradient-ember px-0.5">·</span>Spa
         </a>
         <nav className="hidden md:flex items-center gap-10 text-xs uppercase tracking-[0.2em] text-muted-foreground">
           <a href="#services" className="hover:text-cream transition-colors">Rituals</a>
@@ -120,10 +147,11 @@ function Nav() {
         </nav>
         <a
           href="#book"
-          className="group inline-flex items-center gap-2 px-5 py-2.5 border border-ember/60 text-cream text-xs uppercase tracking-[0.2em] hover:bg-ember hover:border-ember transition-all duration-500"
+          className="group relative inline-flex items-center gap-2 px-5 py-2.5 text-cream text-xs uppercase tracking-[0.2em] overflow-hidden border border-ember/60 hover:border-transparent transition-all duration-500"
         >
-          Reserve
-          <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+          <span className="absolute inset-0 bg-[image:var(--gradient-ember)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <span className="relative">Reserve</span>
+          <span className="relative inline-block transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>
     </header>
@@ -133,28 +161,31 @@ function Nav() {
 function Hero() {
   return (
     <section id="top" className="relative min-h-screen flex items-end overflow-hidden">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster={IMG.hero}
-        className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source src={VIDEOS[0]} type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-transparent" />
+      <div className="absolute inset-0 animate-kenburns">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={IMG.hero}
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src={VIDEOS[0]} type="video/mp4" />
+        </video>
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/10 to-background" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
+      <div className="absolute inset-0" style={{ background: "var(--gradient-heat)" }} />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pb-24 pt-40 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pb-24 pt-40 w-full grain">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-3 mb-8 text-xs uppercase tracking-[0.3em] text-ember">
-            <span className="h-px w-10 bg-ember" />
-            Tbilisi · Est. since a very long time
+          <div className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-full border border-ember/40 bg-background/40 backdrop-blur-md text-[10px] uppercase tracking-[0.3em] text-cream">
+            <span className="h-1.5 w-1.5 rounded-full bg-ember animate-pulse" />
+            Vake, Tbilisi · Open until 11:30 pm
           </div>
-          <h1 className="font-display text-6xl md:text-8xl lg:text-9xl leading-[0.9] text-cream text-balance">
+          <h1 className="font-display text-6xl md:text-8xl lg:text-[10rem] leading-[0.85] text-cream text-balance">
             The art of<br />
-            <em className="text-ember font-light">slowing</em> down.
+            <em className="text-gradient-ember font-light italic">slowing</em> down.
           </h1>
           <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">
             A women-owned sanctuary in Vake where DIBI Milano rituals, master therapists
@@ -163,14 +194,16 @@ function Hero() {
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <a
               href="#book"
-              className="group inline-flex items-center gap-3 bg-ember text-primary-foreground px-8 py-4 text-xs uppercase tracking-[0.25em] hover:bg-cream hover:text-background transition-all duration-500"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 text-xs uppercase tracking-[0.25em] text-primary-foreground overflow-hidden shadow-glow transition-transform duration-500 hover:scale-[1.02]"
+              style={{ background: "var(--gradient-ember)" }}
             >
-              Book your ritual
-              <span className="transition-transform group-hover:translate-x-1">→</span>
+              <span className="absolute inset-0 bg-cream/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000" />
+              <span className="relative">Book your ritual</span>
+              <span className="relative transition-transform group-hover:translate-x-1">→</span>
             </a>
             <a
               href="#services"
-              className="inline-flex items-center gap-3 text-cream px-8 py-4 text-xs uppercase tracking-[0.25em] border border-border hover:border-ember transition-colors"
+              className="inline-flex items-center gap-3 text-cream px-8 py-4 text-xs uppercase tracking-[0.25em] border border-cream/20 hover:border-ember hover:bg-cream/5 backdrop-blur-sm transition-all"
             >
               See the menu
             </a>
@@ -178,26 +211,26 @@ function Hero() {
 
           <div className="mt-16 flex items-center gap-8 text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <div>
-              <div className="font-display text-3xl text-cream normal-case tracking-normal">4.7</div>
+              <div className="font-display text-4xl text-gradient-ember normal-case tracking-normal">4.7</div>
               <div className="mt-1">288 reviews</div>
             </div>
             <div className="h-10 w-px bg-border" />
             <div>
-              <div className="font-display text-3xl text-cream normal-case tracking-normal">15+</div>
+              <div className="font-display text-4xl text-cream normal-case tracking-normal">15+</div>
               <div className="mt-1">Years of craft</div>
             </div>
             <div className="h-10 w-px bg-border" />
             <div>
-              <div className="font-display text-3xl text-cream normal-case tracking-normal">DIBI</div>
+              <div className="font-display text-4xl text-cream normal-case tracking-normal">DIBI</div>
               <div className="mt-1">Milano protocols</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-6 right-6 z-10 text-[10px] uppercase tracking-[0.3em] text-cream/50 flex items-center gap-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-ember animate-pulse" />
-        Open · Closes 11:30 pm
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-cream/60 animate-float">
+        <span>Scroll</span>
+        <span className="h-10 w-px bg-gradient-to-b from-ember to-transparent" />
       </div>
     </section>
   );
@@ -230,19 +263,20 @@ function Marquee() {
 }
 
 function Services() {
+  const ref = useReveal<HTMLDivElement>();
   return (
     <section id="services" className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div ref={ref} className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-[1fr_2fr] gap-16 mb-20">
-          <div>
+          <div data-reveal>
             <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
               01 — The Menu
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1]">
-              Rituals for<br />the body you<br /><em className="text-ember">forgot</em> you had.
+              Rituals for<br />the body you<br /><em className="text-gradient-ember italic">forgot</em> you had.
             </h2>
           </div>
-          <p className="text-muted-foreground text-lg leading-relaxed self-end max-w-lg">
+          <p data-reveal className="text-muted-foreground text-lg leading-relaxed self-end max-w-lg">
             Every treatment begins the same way — a long exhale, warm oil in the therapist's palm,
             the room dimmed to candlelight. What follows is unhurried, and yours alone.
           </p>
@@ -252,22 +286,24 @@ function Services() {
           {services.map((s, i) => (
             <article
               key={s.name}
-              className="group relative bg-background p-10 hover:bg-secondary/50 transition-all duration-500 cursor-pointer"
+              data-reveal
+              className="group relative bg-background p-10 hover:bg-secondary/40 transition-all duration-500 cursor-pointer overflow-hidden"
             >
+              <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl" style={{ background: "var(--gradient-ember)" }} />
               <div className="text-xs text-ember/60 tracking-[0.3em] uppercase mb-8">
                 0{i + 1}
               </div>
-              <h3 className="font-display text-3xl text-cream mb-4 leading-tight">
+              <h3 className="relative font-display text-3xl text-cream mb-4 leading-tight group-hover:text-gradient-ember transition-colors">
                 {s.name}
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-8 min-h-[4.5rem]">
+              <p className="relative text-sm text-muted-foreground leading-relaxed mb-8 min-h-[4.5rem]">
                 {s.body}
               </p>
-              <div className="flex items-baseline justify-between pt-6 border-t border-border">
+              <div className="relative flex items-baseline justify-between pt-6 border-t border-border">
                 <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
                   {s.duration}
                 </span>
-                <span className="font-display text-2xl text-ember">{s.price}</span>
+                <span className="font-display text-3xl text-gradient-ember">{s.price}</span>
               </div>
               <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-ember to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700" />
             </article>
@@ -279,10 +315,12 @@ function Services() {
 }
 
 function Ritual() {
+  const ref = useReveal<HTMLDivElement>();
   return (
     <section id="ritual" className="relative py-32 px-6 bg-secondary/30">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="absolute inset-0 opacity-40" style={{ background: "var(--gradient-heat)" }} />
+      <div ref={ref} className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div data-reveal className="relative aspect-[4/5] overflow-hidden shadow-glow">
           <video
             autoPlay
             muted
@@ -294,6 +332,7 @@ function Ritual() {
             <source src={VIDEOS[2]} type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 ring-1 ring-inset ring-ember/20" />
           <div className="absolute bottom-8 left-8 right-8">
             <div className="text-xs uppercase tracking-[0.3em] text-cream/70">
               — Treatment Room · No. 3
@@ -301,14 +340,14 @@ function Ritual() {
           </div>
         </div>
 
-        <div>
+        <div data-reveal>
           <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
             02 — Philosophy
           </div>
           <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1] mb-10">
             Nothing injected.<br />
             Nothing rushed.<br />
-            <em className="text-ember">Only</em> hands, oil,<br />and time.
+            <em className="text-gradient-ember italic">Only</em> hands, oil,<br />and time.
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-6">
             For over a decade we've refused shortcuts. Our facials are built on
@@ -320,15 +359,15 @@ function Ritual() {
             on the terrace. That's the pace.
           </p>
 
-          <div className="grid grid-cols-3 gap-8 mt-12 pt-12 border-t border-border">
+          <div className="grid grid-cols-3 gap-8 mt-12 pt-12 border-t border-ember/20">
             {[
               { n: "01", t: "Consultation", d: "Skin & body read" },
               { n: "02", t: "The ritual", d: "Bespoke to you" },
               { n: "03", t: "The pause", d: "Tea on the terrace" },
             ].map((step) => (
-              <div key={step.n}>
+              <div key={step.n} className="group">
                 <div className="text-ember text-xs tracking-[0.3em] mb-3">{step.n}</div>
-                <div className="font-display text-xl text-cream mb-1">{step.t}</div>
+                <div className="font-display text-xl text-cream mb-1 group-hover:text-gradient-ember transition-colors">{step.t}</div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">{step.d}</div>
               </div>
             ))}
@@ -349,7 +388,7 @@ function Gallery() {
               03 — Sanctuary
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1] max-w-xl">
-              A place that <em className="text-ember">breathes</em> for you.
+              A place that <em className="text-gradient-ember italic">breathes</em> for you.
             </h2>
           </div>
           <p className="max-w-sm text-muted-foreground">
@@ -421,15 +460,16 @@ function Testimonials() {
 function Booking() {
   return (
     <section id="book" className="relative py-40 px-6 overflow-hidden">
-      <img src={IMG.ambient} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+      <img src={IMG.ambient2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" />
+      <div className="absolute inset-0" style={{ background: "var(--gradient-heat)" }} />
 
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
           05 — Reserve
         </div>
         <h2 className="font-display text-6xl md:text-8xl text-cream leading-[0.95] text-balance">
-          Your <em className="text-ember">quietest</em><br />
+          Your <em className="text-gradient-ember italic">quietest</em><br />
           hour is waiting.
         </h2>
         <p className="mt-8 max-w-lg mx-auto text-muted-foreground text-lg">
@@ -441,14 +481,16 @@ function Booking() {
             href="https://fresha.com"
             target="_blank"
             rel="noreferrer"
-            className="group inline-flex items-center gap-3 bg-ember text-primary-foreground px-10 py-5 text-xs uppercase tracking-[0.25em] hover:bg-cream hover:text-background transition-all duration-500"
+            className="group relative inline-flex items-center gap-3 px-10 py-5 text-xs uppercase tracking-[0.25em] text-primary-foreground overflow-hidden shadow-glow transition-transform duration-500 hover:scale-[1.02]"
+            style={{ background: "var(--gradient-ember)" }}
           >
-            Book on Fresha
-            <span className="transition-transform group-hover:translate-x-1">→</span>
+            <span className="absolute inset-0 bg-cream/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000" />
+            <span className="relative">Book on Fresha</span>
+            <span className="relative transition-transform group-hover:translate-x-1">→</span>
           </a>
           <a
             href="tel:+995599553407"
-            className="inline-flex items-center gap-3 border border-ember/60 text-cream px-10 py-5 text-xs uppercase tracking-[0.25em] hover:bg-ember/10 transition-all"
+            className="inline-flex items-center gap-3 border border-ember/60 text-cream px-10 py-5 text-xs uppercase tracking-[0.25em] hover:bg-ember/10 backdrop-blur-sm transition-all"
           >
             +995 599 55 34 07
           </a>
@@ -481,10 +523,33 @@ function Footer() {
     <footer className="border-t border-border py-12 px-6">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-6 text-xs uppercase tracking-[0.25em] text-muted-foreground">
         <div className="font-display normal-case tracking-widest text-cream text-lg">
-          Premier<span className="text-ember">·</span>Spa & Aesthetics
+          Premier<span className="text-gradient-ember px-0.5">·</span>Spa & Aesthetics
         </div>
         <div>© {new Date().getFullYear()} · Made in Tbilisi with slow hands</div>
       </div>
     </footer>
+  );
+}
+
+function FloatingCTA() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.6);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <a
+      href="#book"
+      aria-label="Book your ritual"
+      className={`fixed bottom-6 right-6 z-40 group inline-flex items-center gap-2 px-6 py-4 text-xs uppercase tracking-[0.25em] text-primary-foreground shadow-glow rounded-full transition-all duration-500 ${
+        show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6 pointer-events-none"
+      }`}
+      style={{ background: "var(--gradient-ember)" }}
+    >
+      <span className="h-2 w-2 rounded-full bg-cream animate-pulse" />
+      Book now
+      <span className="transition-transform group-hover:translate-x-1">→</span>
+    </a>
   );
 }
