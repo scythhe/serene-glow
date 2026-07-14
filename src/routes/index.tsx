@@ -209,22 +209,25 @@ function useReveal<T extends HTMLElement>() {
 
 function Index() {
   return (
-    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <Nav />
-      <Hero />
-      <Marquee />
-      <Services />
-      <Ritual />
-      <Gallery />
-      <Testimonials />
-      <Booking />
-      <Footer />
-      <FloatingCTA />
-    </main>
+    <LangProvider>
+      <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
+        <Nav />
+        <Hero />
+        <Marquee />
+        <Services />
+        <Ritual />
+        <Gallery />
+        <Testimonials />
+        <Booking />
+        <Footer />
+        <FloatingCTA />
+      </main>
+    </LangProvider>
   );
 }
 
 function Nav() {
+  const { t } = useLang();
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -245,25 +248,29 @@ function Nav() {
           Premier<span className="text-gradient-ember px-0.5">·</span>Spa
         </a>
         <nav className="hidden md:flex items-center gap-10 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          <a href="#services" className="hover:text-cream transition-colors">Rituals</a>
-          <a href="#ritual" className="hover:text-cream transition-colors">Philosophy</a>
-          <a href="#gallery" className="hover:text-cream transition-colors">Sanctuary</a>
-          <a href="#reviews" className="hover:text-cream transition-colors">Voices</a>
+          <a href="#services" className="hover:text-cream transition-colors">{t(T.navRituals)}</a>
+          <a href="#ritual" className="hover:text-cream transition-colors">{t(T.navPhilosophy)}</a>
+          <a href="#gallery" className="hover:text-cream transition-colors">{t(T.navSanctuary)}</a>
+          <a href="#reviews" className="hover:text-cream transition-colors">{t(T.navVoices)}</a>
         </nav>
-        <a
-          href="#book"
-          className="group relative inline-flex items-center gap-2 px-5 py-2.5 text-cream text-xs uppercase tracking-[0.2em] overflow-hidden border border-ember/60 hover:border-transparent transition-all duration-500"
-        >
-          <span className="absolute inset-0 bg-[image:var(--gradient-ember)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative">Reserve</span>
-          <span className="relative inline-block transition-transform group-hover:translate-x-1">→</span>
-        </a>
+        <div className="flex items-center gap-3">
+          <LangSwitch />
+          <a
+            href="#book"
+            className="group relative inline-flex items-center gap-2 px-5 py-2.5 text-cream text-xs uppercase tracking-[0.2em] overflow-hidden border border-ember/60 hover:border-transparent transition-all duration-500"
+          >
+            <span className="absolute inset-0 bg-[image:var(--gradient-ember)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <span className="relative">{t(T.reserve)}</span>
+            <span className="relative inline-block transition-transform group-hover:translate-x-1">→</span>
+          </a>
+        </div>
       </div>
     </header>
   );
 }
 
 function Hero() {
+  const { t } = useLang();
   return (
     <section id="top" className="relative min-h-screen flex items-end overflow-hidden">
       <div className="absolute inset-0 animate-kenburns">
@@ -286,15 +293,14 @@ function Hero() {
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-full border border-ember/40 bg-background/40 backdrop-blur-md text-[10px] uppercase tracking-[0.3em] text-cream">
             <span className="h-1.5 w-1.5 rounded-full bg-ember animate-pulse" />
-            Vake, Tbilisi · Open until 11:30 pm
+            {t(T.heroBadge)}
           </div>
           <h1 className="font-display text-6xl md:text-8xl lg:text-[10rem] leading-[0.85] text-cream text-balance">
-            The art of<br />
-            <em className="text-gradient-ember font-light italic">slowing</em> down.
+            {t(T.heroTitleA)}<br />
+            <em className="text-gradient-ember font-light italic">{t(T.heroTitleB)}</em>{t(T.heroTitleC)}
           </h1>
           <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">
-            A women-owned sanctuary in Vake where DIBI Milano rituals, master therapists
-            and quiet Georgian hospitality meet. Nothing rushed. Nothing artificial.
+            {t(T.heroCopy)}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <a
@@ -303,38 +309,38 @@ function Hero() {
               style={{ background: "var(--gradient-ember)" }}
             >
               <span className="absolute inset-0 bg-cream/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000" />
-              <span className="relative">Book your ritual</span>
+              <span className="relative">{t(T.bookCta)}</span>
               <span className="relative transition-transform group-hover:translate-x-1">→</span>
             </a>
             <a
               href="#services"
               className="inline-flex items-center gap-3 text-cream px-8 py-4 text-xs uppercase tracking-[0.25em] border border-cream/20 hover:border-ember hover:bg-cream/5 backdrop-blur-sm transition-all"
             >
-              See the menu
+              {t(T.seeMenu)}
             </a>
           </div>
 
           <div className="mt-16 flex items-center gap-8 text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <div>
               <div className="font-display text-4xl text-gradient-ember normal-case tracking-normal">4.7</div>
-              <div className="mt-1">288 reviews</div>
+              <div className="mt-1">{t(T.reviewsCount)}</div>
             </div>
             <div className="h-10 w-px bg-border" />
             <div>
               <div className="font-display text-4xl text-cream normal-case tracking-normal">15+</div>
-              <div className="mt-1">Years of craft</div>
+              <div className="mt-1">{t(T.yearsCraft)}</div>
             </div>
             <div className="h-10 w-px bg-border" />
             <div>
               <div className="font-display text-4xl text-cream normal-case tracking-normal">DIBI</div>
-              <div className="mt-1">Milano protocols</div>
+              <div className="mt-1">{t(T.milanoProto)}</div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-cream/60 animate-float">
-        <span>Scroll</span>
+        <span>{t(T.scroll)}</span>
         <span className="h-10 w-px bg-gradient-to-b from-ember to-transparent" />
       </div>
     </section>
@@ -368,6 +374,8 @@ function Marquee() {
 }
 
 function Services() {
+  const { t } = useLang();
+  const services = useServices();
   const ref = useReveal<HTMLDivElement>();
   return (
     <section id="services" className="py-32 px-6">
@@ -375,15 +383,14 @@ function Services() {
         <div className="grid md:grid-cols-[1fr_2fr] gap-16 mb-20">
           <div data-reveal>
             <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
-              01 — The Menu
+              {t(T.sec01)}
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1]">
-              Rituals for<br />the body you<br /><em className="text-gradient-ember italic">forgot</em> you had.
+              {t(T.servicesTitleA)}<br />{t(T.servicesTitleB)}<br /><em className="text-gradient-ember italic">{t(T.servicesTitleC)}</em>{t(T.servicesTitleD)}
             </h2>
           </div>
           <p data-reveal className="text-muted-foreground text-lg leading-relaxed self-end max-w-lg">
-            Every treatment begins the same way — a long exhale, warm oil in the therapist's palm,
-            the room dimmed to candlelight. What follows is unhurried, and yours alone.
+            {t(T.servicesIntro)}
           </p>
         </div>
 
@@ -420,6 +427,7 @@ function Services() {
 }
 
 function Ritual() {
+  const { t } = useLang();
   const ref = useReveal<HTMLDivElement>();
   return (
     <section id="ritual" className="relative py-32 px-6 bg-secondary/30">
@@ -440,35 +448,32 @@ function Ritual() {
           <div className="absolute inset-0 ring-1 ring-inset ring-ember/20" />
           <div className="absolute bottom-8 left-8 right-8">
             <div className="text-xs uppercase tracking-[0.3em] text-cream/70">
-              — Treatment Room · No. 3
+              {t(T.treatmentRoom)}
             </div>
           </div>
         </div>
 
         <div data-reveal>
           <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
-            02 — Philosophy
+            {t(T.sec02)}
           </div>
           <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1] mb-10">
-            Nothing injected.<br />
-            Nothing rushed.<br />
-            <em className="text-gradient-ember italic">Only</em> hands, oil,<br />and time.
+            {t(T.philLine1)}<br />
+            {t(T.philLine2)}<br />
+            <em className="text-gradient-ember italic">{t(T.philOnly)}</em>{t(T.philLine3b)}<br />{t(T.philLine4)}
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-            For over a decade we've refused shortcuts. Our facials are built on
-            DDP Professional and DIBI Milano protocols — result-driven Italian skincare
-            performed by therapists who trained for years, not weekends.
+            {t(T.phil1)}
           </p>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Every guest is greeted with a glass of tea. Some leave with a glass of red wine
-            on the terrace. That's the pace.
+            {t(T.phil2)}
           </p>
 
           <div className="grid grid-cols-3 gap-8 mt-12 pt-12 border-t border-ember/20">
             {[
-              { n: "01", t: "Consultation", d: "Skin & body read" },
-              { n: "02", t: "The ritual", d: "Bespoke to you" },
-              { n: "03", t: "The pause", d: "Tea on the terrace" },
+              { n: "01", t: t(T.stepConsult), d: t(T.stepConsultD) },
+              { n: "02", t: t(T.stepRitual), d: t(T.stepRitualD) },
+              { n: "03", t: t(T.stepPause), d: t(T.stepPauseD) },
             ].map((step) => (
               <div key={step.n} className="group">
                 <div className="text-ember text-xs tracking-[0.3em] mb-3">{step.n}</div>
@@ -484,20 +489,21 @@ function Ritual() {
 }
 
 function Gallery() {
+  const { t } = useLang();
   return (
     <section id="gallery" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-end justify-between mb-16 flex-wrap gap-6">
           <div>
             <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
-              03 — Sanctuary
+              {t(T.sec03)}
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1] max-w-xl">
-              A place that <em className="text-gradient-ember italic">breathes</em> for you.
+              {t(T.galleryTitleA)} <em className="text-gradient-ember italic">{t(T.galleryTitleB)}</em>{t(T.galleryTitleC)}
             </h2>
           </div>
           <p className="max-w-sm text-muted-foreground">
-            Warm woods, ginger blooms, incense drifting between rooms. Come as you are.
+            {t(T.galleryCopy)}
           </p>
         </div>
 
@@ -528,19 +534,21 @@ function Gallery() {
 }
 
 function Testimonials() {
+  const { t } = useLang();
+  const reviews = useReviews();
   return (
     <section id="reviews" className="py-32 px-6 bg-secondary/30">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-20">
           <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
-            04 — Voices
+            {t(T.sec04)}
           </div>
           <h2 className="font-display text-5xl md:text-7xl text-cream leading-[1] text-balance">
-            <em className="text-ember">288</em> guests.<br />One long exhale.
+            <em className="text-ember">{t(T.voicesTitleA)}</em>{t(T.voicesTitleB)}<br />{t(T.voicesTitleC)}
           </h2>
           <div className="mt-6 flex items-center justify-center gap-2 text-ember">
             {[..."★★★★★"].map((s, i) => <span key={i} className="text-xl">{s}</span>)}
-            <span className="ml-3 text-sm text-muted-foreground uppercase tracking-[0.2em]">4.7 on Google</span>
+            <span className="ml-3 text-sm text-muted-foreground uppercase tracking-[0.2em]">{t(T.onGoogle)}</span>
           </div>
         </div>
 
@@ -563,6 +571,7 @@ function Testimonials() {
 }
 
 function Booking() {
+  const { t } = useLang();
   return (
     <section id="book" className="relative py-40 px-6 overflow-hidden">
       <img src={IMG.ambient2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15" />
@@ -571,14 +580,14 @@ function Booking() {
 
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="text-xs uppercase tracking-[0.3em] text-ember mb-6">
-          05 — Reserve
+          {t(T.sec05)}
         </div>
         <h2 className="font-display text-6xl md:text-8xl text-cream leading-[0.95] text-balance">
-          Your <em className="text-gradient-ember italic">quietest</em><br />
-          hour is waiting.
+          {t(T.bookTitleA)} <em className="text-gradient-ember italic">{t(T.bookTitleB)}</em><br />
+          {t(T.bookTitleC)}
         </h2>
         <p className="mt-8 max-w-lg mx-auto text-muted-foreground text-lg">
-          Reservations open daily until 11:30 pm. Walk-ins welcome, but the good hours go quickly.
+          {t(T.bookCopy)}
         </p>
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
@@ -590,7 +599,7 @@ function Booking() {
             style={{ background: "var(--gradient-ember)" }}
           >
             <span className="absolute inset-0 bg-cream/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000" />
-            <span className="relative">Book on Fresha</span>
+            <span className="relative">{t(T.bookFresha)}</span>
             <span className="relative transition-transform group-hover:translate-x-1">→</span>
           </a>
           <a
@@ -603,19 +612,19 @@ function Booking() {
 
         <div className="mt-20 grid md:grid-cols-3 gap-10 text-left border-t border-border pt-16">
           <div>
-            <div className="text-xs uppercase tracking-[0.3em] text-ember mb-3">Address</div>
-            <div className="font-display text-xl text-cream">22 Grigol Mukhadze St</div>
-            <div className="text-sm text-muted-foreground mt-1">Tbilisi 0162, Vake</div>
+            <div className="text-xs uppercase tracking-[0.3em] text-ember mb-3">{t(T.address)}</div>
+            <div className="font-display text-xl text-cream">{t(T.addressLine1)}</div>
+            <div className="text-sm text-muted-foreground mt-1">{t(T.addressLine2)}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-[0.3em] text-ember mb-3">Hours</div>
-            <div className="font-display text-xl text-cream">Every day</div>
-            <div className="text-sm text-muted-foreground mt-1">Until 11:30 pm</div>
+            <div className="text-xs uppercase tracking-[0.3em] text-ember mb-3">{t(T.hours)}</div>
+            <div className="font-display text-xl text-cream">{t(T.everyDay)}</div>
+            <div className="text-sm text-muted-foreground mt-1">{t(T.untilLate)}</div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-[0.3em] text-ember mb-3">House</div>
-            <div className="font-display text-xl text-cream">Women-owned</div>
-            <div className="text-sm text-muted-foreground mt-1">LGBTQ+ friendly</div>
+            <div className="text-xs uppercase tracking-[0.3em] text-ember mb-3">{t(T.house)}</div>
+            <div className="font-display text-xl text-cream">{t(T.certified)}</div>
+            <div className="text-sm text-muted-foreground mt-1">{t(T.proExperience)}</div>
           </div>
         </div>
       </div>
@@ -624,19 +633,21 @@ function Booking() {
 }
 
 function Footer() {
+  const { t } = useLang();
   return (
     <footer className="border-t border-border py-12 px-6">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-6 text-xs uppercase tracking-[0.25em] text-muted-foreground">
         <div className="font-display normal-case tracking-widest text-cream text-lg">
           Premier<span className="text-gradient-ember px-0.5">·</span>Spa & Aesthetics
         </div>
-        <div>© {new Date().getFullYear()} · Made in Tbilisi with slow hands</div>
+        <div>© {new Date().getFullYear()} · {t(T.footerNote)}</div>
       </div>
     </footer>
   );
 }
 
 function FloatingCTA() {
+  const { t } = useLang();
   const [show, setShow] = useState(false);
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.6);
@@ -653,7 +664,7 @@ function FloatingCTA() {
       style={{ background: "var(--gradient-ember)" }}
     >
       <span className="h-2 w-2 rounded-full bg-cream animate-pulse" />
-      Book now
+      {t(T.bookNow)}
       <span className="transition-transform group-hover:translate-x-1">→</span>
     </a>
   );
