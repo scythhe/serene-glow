@@ -49,10 +49,11 @@ const T = {
     "ყოველი პროცედურა ერთნაირად იწყება — ღრმა ამოსუნთქვა, თბილი ზეთი თერაპევტის ხელში, სანთლის შუქი. ის რაც შემდეგ ხდება — არ ჩქარობს და მხოლოდ თქვენია."
   ),
   sec02: d("02 — Philosophy", "02 — ფილოსოფია"),
-  philTitle: d(
-    ["Nothing injected.", "Nothing rushed.", "Only", " hands, oil,", "and time."],
-    ["არაფერი ინიექციური.", "არაფერი აჩქარებული.", "მხოლოდ", " ხელი, ზეთი", "და დრო."]
-  ) as unknown as Dict, // handled separately
+  philLine1: d("Nothing injected.", "არაფერი ინიექციური."),
+  philLine2: d("Nothing rushed.", "არაფერი აჩქარებული."),
+  philOnly: d("Only", "მხოლოდ"),
+  philLine3b: d(" hands, oil,", " ხელი, ზეთი,"),
+  philLine4: d("and time.", "და დრო."),
   phil1: d(
     "For over a decade we've refused shortcuts. Our facials are built on DDP Professional and DIBI Milano protocols — result-driven Italian skincare performed by therapists who trained for years, not weekends.",
     "ათ წელზე მეტია უარს ვამბობთ გამარტივებულ გზებზე. ჩვენი ფეისიალები DDP Professional-სა და DIBI Milano-ს პროტოკოლებზეა აგებული — შედეგზე ორიენტირებული იტალიური მოვლა, თერაპევტების ხელით, რომლებმაც წლები ისწავლეს, არა კვირაები."
