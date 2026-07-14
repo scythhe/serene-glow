@@ -197,7 +197,7 @@ function Hero() {
               href="#services"
               className="inline-flex items-center gap-3 text-cream px-8 py-4 text-xs uppercase tracking-[0.25em] border border-cream/20 hover:border-ember hover:bg-cream/5 backdrop-blur-sm transition-all"
             >
-              See the menu
+              See services
             </a>
           </div>
 
