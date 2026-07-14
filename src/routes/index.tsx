@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -15,67 +15,171 @@ const IMG = {
 };
 const VIDEOS = ["/media/vid_0.mp4", "/media/vid_1.mp4", "/media/vid_2.mp4", "/media/vid_3.mp4"];
 
-const services = [
-  {
-    name: "Signature Deep Tissue",
-    duration: "90 min",
-    price: "₾ 220",
-    body: "Slow, deliberate pressure that unwinds every held-in day. Warm oils, long strokes, breath work.",
-  },
-  {
-    name: "DIBI Milano Facial",
-    duration: "75 min",
-    price: "₾ 260",
-    body: "Italian ritual facial built on DDP Professional and DIBI Milano protocols. No injections — pure craft.",
-  },
-  {
-    name: "Detox Body Ritual",
-    duration: "120 min",
-    price: "₾ 340",
-    body: "Dry brushing, mineral scrub, warming wrap and lymphatic massage. You leave lighter than you arrived.",
-  },
-  {
-    name: "Sauna + Massage Escape",
-    duration: "45 + 90 min",
-    price: "₾ 290",
-    body: "Forty-five minutes in the steam sauna, then ninety in the hands of a master therapist.",
-  },
-  {
-    name: "Couples Retreat",
-    duration: "2 hours",
-    price: "₾ 520",
-    body: "Side by side in candlelight, ending on the terrace with a glass of Georgian red.",
-  },
-  {
-    name: "Salt Wrap & Bodywork",
-    duration: "2 hours",
-    price: "₾ 360",
-    body: "Full salt wrap followed by deep tissue. Exhilarating, grounding, restorative.",
-  },
-];
+type Lang = "en" | "ka";
+type Dict = Record<Lang, string>;
+const d = (en: string, ka: string): Dict => ({ en, ka });
 
-const reviews = [
-  {
-    quote: "Taco's hands looked like waves — they took care of my body carefully.",
-    name: "Maya Matueva",
-    role: "Local Guide",
-  },
-  {
-    quote: "I get facials every month at high-end spas in the US and have a very high bar. They did a great job.",
-    name: "Sasha Hoffman",
-    role: "Local Guide, USA",
-  },
-  {
-    quote: "A true gem tucked away in Vake. Body scrub, wrap and massage — done with care and precision.",
-    name: "Paul Dettman",
-    role: "Visitor",
-  },
-  {
-    quote: "Real relaxation and super quality in the heart of the city. Love the DIBI Milano products.",
-    name: "Xatuna Japaridze",
-    role: "Regular",
-  },
-];
+const T = {
+  navRituals: d("Rituals", "რიტუალები"),
+  navPhilosophy: d("Philosophy", "ფილოსოფია"),
+  navSanctuary: d("Sanctuary", "სივრცე"),
+  navVoices: d("Voices", "შეფასებები"),
+  reserve: d("Reserve", "დაჯავშნა"),
+  heroBadge: d("Vake, Tbilisi · Open until 11:30 pm", "ვაკე, თბილისი · ღიაა 23:30-მდე"),
+  heroTitleA: d("The art of", "ხელოვნება"),
+  heroTitleB: d("slowing", "შენელების"),
+  heroTitleC: d(" down.", "."),
+  heroCopy: d(
+    "A sanctuary in Vake where DIBI Milano rituals, master therapists and quiet Georgian hospitality meet. Nothing rushed. Nothing artificial.",
+    "თავშესაფარი ვაკეში, სადაც DIBI Milano-ს რიტუალები, გამოცდილი თერაპევტები და ქართული სტუმართმოყვარეობა ერთდება. არაფერი აჩქარებული. არაფერი ხელოვნური."
+  ),
+  bookCta: d("Book your ritual", "დაჯავშნეთ რიტუალი"),
+  seeMenu: d("See the menu", "იხილეთ მენიუ"),
+  reviewsCount: d("288 reviews", "288 შეფასება"),
+  yearsCraft: d("Years of craft", "წლიანი გამოცდილება"),
+  milanoProto: d("Milano protocols", "მილანური პროტოკოლი"),
+  scroll: d("Scroll", "ქვემოთ"),
+  sec01: d("01 — The Menu", "01 — მენიუ"),
+  servicesTitleA: d("Rituals for", "რიტუალები"),
+  servicesTitleB: d("the body you", "სხეულისთვის,"),
+  servicesTitleC: d("forgot", "რომელიც დაგავიწყდათ"),
+  servicesTitleD: d(" you had.", "."),
+  servicesIntro: d(
+    "Every treatment begins the same way — a long exhale, warm oil in the therapist's palm, the room dimmed to candlelight. What follows is unhurried, and yours alone.",
+    "ყოველი პროცედურა ერთნაირად იწყება — ღრმა ამოსუნთქვა, თბილი ზეთი თერაპევტის ხელში, სანთლის შუქი. ის რაც შემდეგ ხდება — არ ჩქარობს და მხოლოდ თქვენია."
+  ),
+  sec02: d("02 — Philosophy", "02 — ფილოსოფია"),
+  philTitle: d(
+    ["Nothing injected.", "Nothing rushed.", "Only", " hands, oil,", "and time."],
+    ["არაფერი ინიექციური.", "არაფერი აჩქარებული.", "მხოლოდ", " ხელი, ზეთი", "და დრო."]
+  ) as unknown as Dict, // handled separately
+  phil1: d(
+    "For over a decade we've refused shortcuts. Our facials are built on DDP Professional and DIBI Milano protocols — result-driven Italian skincare performed by therapists who trained for years, not weekends.",
+    "ათ წელზე მეტია უარს ვამბობთ გამარტივებულ გზებზე. ჩვენი ფეისიალები DDP Professional-სა და DIBI Milano-ს პროტოკოლებზეა აგებული — შედეგზე ორიენტირებული იტალიური მოვლა, თერაპევტების ხელით, რომლებმაც წლები ისწავლეს, არა კვირაები."
+  ),
+  phil2: d(
+    "Every guest is greeted with a glass of tea. Some leave with a glass of red wine on the terrace. That's the pace.",
+    "ყოველ სტუმარს ჩაის ჭიქით ვხვდებით. ზოგი წითელი ღვინის ჭიქით ტოვებს ტერასას. ეს ჩვენი ტემპია."
+  ),
+  stepConsult: d("Consultation", "კონსულტაცია"),
+  stepConsultD: d("Skin & body read", "კანისა და სხეულის დათვალიერება"),
+  stepRitual: d("The ritual", "რიტუალი"),
+  stepRitualD: d("Bespoke to you", "მორგებული თქვენზე"),
+  stepPause: d("The pause", "პაუზა"),
+  stepPauseD: d("Tea on the terrace", "ჩაი ტერასაზე"),
+  treatmentRoom: d("— Treatment Room · No. 3", "— საპროცედურო ოთახი · N3"),
+  sec03: d("03 — Sanctuary", "03 — სივრცე"),
+  galleryTitleA: d("A place that", "სივრცე, რომელიც"),
+  galleryTitleB: d("breathes", "სუნთქავს"),
+  galleryTitleC: d(" for you.", " თქვენთვის."),
+  galleryCopy: d(
+    "Warm woods, ginger blooms, incense drifting between rooms. Come as you are.",
+    "თბილი ხე, ჯანჯაფილის ყვავილები, საკმევლის სურნელი ოთახებში. მოდით ისე, როგორც ხართ."
+  ),
+  sec04: d("04 — Voices", "04 — შეფასებები"),
+  voicesTitleA: d("288", "288"),
+  voicesTitleB: d(" guests.", " სტუმარი."),
+  voicesTitleC: d("One long exhale.", "ერთი ღრმა ამოსუნთქვა."),
+  onGoogle: d("4.7 on Google", "4.7 Google-ზე"),
+  sec05: d("05 — Reserve", "05 — დაჯავშნა"),
+  bookTitleA: d("Your", "თქვენი"),
+  bookTitleB: d("quietest", "ყველაზე წყნარი"),
+  bookTitleC: d("hour is waiting.", "საათი გელოდებათ."),
+  bookCopy: d(
+    "Reservations open daily until 11:30 pm. Walk-ins welcome, but the good hours go quickly.",
+    "ჯავშანი ხელმისაწვდომია ყოველდღე 23:30-მდე. ვხვდებით ჯავშნის გარეშეც, თუმცა კარგი საათები სწრაფად იკავებს."
+  ),
+  bookFresha: d("Book on Fresha", "დაჯავშნა Fresha-ზე"),
+  address: d("Address", "მისამართი"),
+  addressLine1: d("22 Grigol Mukhadze St", "გრიგოლ მუხაძის ქ. 22"),
+  addressLine2: d("Tbilisi 0162, Vake", "თბილისი 0162, ვაკე"),
+  hours: d("Hours", "სამუშაო საათები"),
+  everyDay: d("Every day", "ყოველდღე"),
+  untilLate: d("Until 11:30 pm", "23:30-მდე"),
+  house: d("Expertise", "გამოცდილება"),
+  certified: d("Certified Specialists", "სერტიფიცირებული სპეციალისტები"),
+  proExperience: d("Professional experience", "პროფესიული გამოცდილება"),
+  footerNote: d("Made in Tbilisi with slow hands", "შექმნილია თბილისში, აუჩქარებელი ხელით"),
+  bookNow: d("Book now", "დაჯავშნა"),
+};
+
+type Ctx = { lang: Lang; t: (k: Dict) => string; toggle: () => void };
+const LangCtx = createContext<Ctx>({ lang: "en", t: (k) => k.en, toggle: () => {} });
+const useLang = () => useContext(LangCtx);
+
+function LangProvider({ children }: { children: ReactNode }) {
+  const [lang, setLang] = useState<Lang>("en");
+  useEffect(() => {
+    const stored = (typeof window !== "undefined" && window.localStorage.getItem("lang")) as Lang | null;
+    if (stored === "en" || stored === "ka") setLang(stored);
+  }, []);
+  const toggle = () => {
+    setLang((l) => {
+      const next: Lang = l === "en" ? "ka" : "en";
+      if (typeof window !== "undefined") window.localStorage.setItem("lang", next);
+      return next;
+    });
+  };
+  const t = (k: Dict) => k[lang];
+  return <LangCtx.Provider value={{ lang, t, toggle }}>{children}</LangCtx.Provider>;
+}
+
+function LangSwitch({ className = "" }: { className?: string }) {
+  const { lang, toggle } = useLang();
+  return (
+    <button
+      onClick={toggle}
+      aria-label="Toggle language"
+      className={`inline-flex items-center gap-1 px-3 py-1.5 text-[10px] uppercase tracking-[0.25em] border border-ember/40 text-cream hover:border-ember hover:bg-ember/10 backdrop-blur-md transition-all ${className}`}
+    >
+      <span className={lang === "en" ? "text-gradient-ember" : "text-muted-foreground"}>EN</span>
+      <span className="text-ember/50">/</span>
+      <span className={lang === "ka" ? "text-gradient-ember" : "text-muted-foreground"}>KA</span>
+    </button>
+  );
+}
+
+function useServices() {
+  const { t } = useLang();
+  return [
+    { name: t(d("Signature Deep Tissue", "ღრმა მასაჟი")), duration: t(d("90 min", "90 წთ")), price: "₾ 220",
+      body: t(d("Slow, deliberate pressure that unwinds every held-in day. Warm oils, long strokes, breath work.",
+        "ნელი, გააზრებული წნევა, რომელიც ხსნის დაძაბულ დღეს. თბილი ზეთი, გრძელი მოძრაობა, სუნთქვა.")) },
+    { name: t(d("DIBI Milano Facial", "DIBI Milano ფეისიალი")), duration: t(d("75 min", "75 წთ")), price: "₾ 260",
+      body: t(d("Italian ritual facial built on DDP Professional and DIBI Milano protocols. No injections — pure craft.",
+        "იტალიური რიტუალური ფეისიალი DDP Professional-სა და DIBI Milano-ს პროტოკოლებით. ინიექციების გარეშე — მხოლოდ ოსტატობა.")) },
+    { name: t(d("Detox Body Ritual", "დეტოქს რიტუალი")), duration: t(d("120 min", "120 წთ")), price: "₾ 340",
+      body: t(d("Dry brushing, mineral scrub, warming wrap and lymphatic massage. You leave lighter than you arrived.",
+        "მშრალი ჯაგრისი, მინერალური სკრაბი, გამათბობელი შემოსახვევი და ლიმფური მასაჟი. ხართ უფრო მსუბუქი, ვიდრე შემოხვედით.")) },
+    { name: t(d("Sauna + Massage Escape", "საუნა + მასაჟი")), duration: t(d("45 + 90 min", "45 + 90 წთ")), price: "₾ 290",
+      body: t(d("Forty-five minutes in the steam sauna, then ninety in the hands of a master therapist.",
+        "45 წუთი ორთქლის საუნაში, შემდეგ 90 წუთი ოსტატი თერაპევტის ხელში.")) },
+    { name: t(d("Couples Retreat", "წყვილების რიტუალი")), duration: t(d("2 hours", "2 საათი")), price: "₾ 520",
+      body: t(d("Side by side in candlelight, ending on the terrace with a glass of Georgian red.",
+        "ერთმანეთის გვერდით სანთლის შუქზე, ტერასაზე ქართული წითელი ღვინის ჭიქით.")) },
+    { name: t(d("Salt Wrap & Bodywork", "მარილის შემოსახვევი")), duration: t(d("2 hours", "2 საათი")), price: "₾ 360",
+      body: t(d("Full salt wrap followed by deep tissue. Exhilarating, grounding, restorative.",
+        "სრული მარილის შემოსახვევი და ღრმა მასაჟი. მაინტონიზირებელი, დამამშვიდებელი, აღმდგენი.")) },
+  ];
+}
+
+function useReviews() {
+  const { t } = useLang();
+  return [
+    { quote: t(d("Taco's hands looked like waves — they took care of my body carefully.",
+        "ტაკოს ხელი ტალღას ჰგავდა — ჩემს სხეულს ფაქიზად უვლიდნენ.")),
+      name: "Maya Matueva", role: t(d("Local Guide", "ადგილობრივი გიდი")) },
+    { quote: t(d("I get facials every month at high-end spas in the US and have a very high bar. They did a great job.",
+        "ყოველთვიურად ვიკეთებ ფეისიალს აშშ-ის მაღალი კლასის სპებში. აქ შესანიშნავად გაართვეს თავი.")),
+      name: "Sasha Hoffman", role: t(d("Local Guide, USA", "ადგილობრივი გიდი, აშშ")) },
+    { quote: t(d("A true gem tucked away in Vake. Body scrub, wrap and massage — done with care and precision.",
+        "ნამდვილი აღმოჩენა ვაკეში. სკრაბი, შემოსახვევი და მასაჟი — სიფრთხილითა და სიზუსტით.")),
+      name: "Paul Dettman", role: t(d("Visitor", "სტუმარი")) },
+    { quote: t(d("Real relaxation and super quality in the heart of the city. Love the DIBI Milano products.",
+        "ნამდვილი დასვენება და მაღალი ხარისხი ქალაქის ცენტრში. DIBI Milano მიყვარს.")),
+      name: "Xatuna Japaridze", role: t(d("Regular", "მუდმივი სტუმარი")) },
+  ];
+}
 
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
