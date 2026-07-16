@@ -68,6 +68,8 @@
   --color-bronze: var(--bronze);
   --color-rose: var(--rose);
   --color-gold: var(--gold);
+  --color-sand: var(--sand);
+  --color-foam: var(--foam);
 }
 
 :root {
@@ -97,7 +99,9 @@
   --bronze: oklch(0.45 0.08 235);
   --rose: oklch(0.68 0.17 195);
   --gold: oklch(0.82 0.13 200);
-  --gradient-ember: linear-gradient(135deg, oklch(0.68 0.17 195), oklch(0.60 0.16 215) 45%, oklch(0.82 0.13 200));
+  --sand: oklch(0.87 0.08 85);
+  --foam: oklch(0.96 0.02 200);
+  --gradient-ember: linear-gradient(135deg, oklch(0.68 0.17 195), oklch(0.60 0.16 215) 40%, oklch(0.87 0.08 85));
   --gradient-heat: radial-gradient(circle at 20% 20%, oklch(0.60 0.16 215 / 0.35), transparent 60%), radial-gradient(circle at 80% 60%, oklch(0.68 0.17 195 / 0.25), transparent 60%);
   --shadow-glow: 0 30px 80px -20px oklch(0.60 0.16 215 / 0.55);
   --shadow-soft: 0 20px 60px -20px oklch(0 0 0 / 0.6);
@@ -224,6 +228,25 @@
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+@keyframes waveDrift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes bubbleRise {
+  0% { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
+  10% { opacity: 0.7; }
+  50% { transform: translateY(-45vh) translateX(12px) scale(0.85); }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-92vh) translateX(-8px) scale(1); opacity: 0; }
+}
+@keyframes caustics {
+  0%, 100% { background-position: 0% 0%, 100% 100%; opacity: 0.5; }
+  50% { background-position: 30% 20%, 70% 80%; opacity: 0.9; }
+}
+@keyframes soundbar {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
 
 @utility animate-kenburns {
   animation: kenburns 20s ease-in-out infinite alternate;
@@ -233,6 +256,52 @@
 }
 @utility animate-float {
   animation: float 4s ease-in-out infinite;
+}
+
+.wave-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  animation: waveDrift linear infinite;
+  will-change: transform;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -48px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, oklch(0.96 0.02 200 / 0.5), oklch(0.82 0.13 200 / 0.12) 60%, transparent);
+  box-shadow: inset 0 0 4px oklch(0.96 0.02 200 / 0.35);
+  animation: bubbleRise linear infinite;
+  will-change: transform, opacity;
+}
+
+.caustics {
+  position: relative;
+}
+.caustics::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% 10%, oklch(0.82 0.13 200 / 0.14), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 80% 30%, oklch(0.68 0.17 195 / 0.10), transparent 60%);
+  background-size: 160% 160%, 160% 160%;
+  animation: caustics 14s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.soundbar {
+  display: inline-block;
+  width: 2px;
+  height: 12px;
+  border-radius: 2px;
+  background: currentColor;
+  transform-origin: bottom;
+  animation: soundbar 1.2s ease-in-out infinite;
 }
 
 .reveal {

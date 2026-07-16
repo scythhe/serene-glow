@@ -96,11 +96,14 @@ function Index() {
       <Hero />
       <Marquee />
       <Services />
+      <WaveDivider />
       <Ritual />
       <Gallery />
+      <WaveDivider flip />
       <Testimonials />
       <Booking />
       <Footer />
+      <OceanSound />
       <FloatingCTA />
     </main>
   );
@@ -167,6 +170,8 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/10 to-background" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
       <div className="absolute inset-0" style={{ background: "var(--gradient-heat)" }} />
+      <div className="absolute inset-0 caustics" />
+      <Bubbles />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pb-24 pt-40 w-full grain">
         <div className="max-w-3xl">
@@ -176,10 +181,10 @@ function Hero() {
           </div>
           <h1 className="font-display text-6xl md:text-8xl lg:text-[10rem] leading-[0.85] text-cream text-balance">
             The art of<br />
-            <em className="text-gradient-ember font-light italic">slowing</em> down.
+            <em className="text-gradient-ember font-light italic">drifting</em> away.
           </h1>
           <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">
-            A sanctuary in Vake where DIBI Milano rituals, master therapists and quiet Georgian hospitality meet. Nothing rushed. Nothing artificial.
+            A sanctuary in Vake with the hush of a slow morning by the sea — DIBI Milano rituals, master therapists, and quiet Georgian hospitality. Nothing rushed. Nothing artificial.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <a
@@ -190,7 +195,7 @@ function Hero() {
               style={{ background: "var(--gradient-ember)" }}
             >
               <span className="absolute inset-0 bg-cream/20 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-1000" />
-              <span className="relative">Book your ritual</span>
+              <span className="relative">Book your escape</span>
               <span className="relative transition-transform group-hover:translate-x-1">→</span>
             </a>
             <a
@@ -199,6 +204,9 @@ function Hero() {
             >
               See services
             </a>
+          </div>
+          <div className="mt-5 text-[11px] uppercase tracking-[0.25em] text-cream/50">
+            Rituals from ₾ 60 · Evenings fill first — reserve yours
           </div>
 
           <div className="mt-16 flex items-center gap-8 text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -224,6 +232,9 @@ function Hero() {
         <span>Scroll</span>
         <span className="h-10 w-px bg-gradient-to-b from-ember to-transparent" />
       </div>
+      <div className="absolute inset-x-0 bottom-0 z-[5]">
+        <WaveDivider bare />
+      </div>
     </section>
   );
 }
@@ -238,6 +249,8 @@ function Marquee() {
     "Aromatherapy",
     "Sauna & Steam",
     "Couples Retreat",
+    "Ocean Calm",
+    "Golden-Hour Glow",
   ];
   return (
     <section className="border-y border-border py-6 overflow-hidden bg-secondary/40">
@@ -269,7 +282,7 @@ function Services() {
             </h2>
           </div>
           <p data-reveal className="text-muted-foreground text-lg leading-relaxed self-end max-w-lg">
-            Every treatment begins the same way — a long exhale, warm oil in the therapist's palm, the room dimmed to candlelight. What follows is unhurried, and yours alone.
+            Every treatment begins the same way — a long exhale, warm oil in the therapist's palm, the room dimmed to candlelight, somewhere the hush of waves. What follows is unhurried, and yours alone.
           </p>
         </div>
 
@@ -379,11 +392,11 @@ function Gallery() {
               03 — Sanctuary
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1] max-w-xl">
-              A place that <em className="text-gradient-ember italic">breathes</em> for you.
+              A place that <em className="text-gradient-ember italic">breathes</em> like the tide.
             </h2>
           </div>
           <p className="max-w-sm text-muted-foreground">
-            Warm woods, ginger blooms, incense drifting between rooms. Come as you are.
+            Warm woods, ginger blooms, incense drifting between rooms like sea mist. Come as you are.
           </p>
         </div>
 
@@ -460,11 +473,11 @@ function Booking() {
           05 — Reserve
         </div>
         <h2 className="font-display text-6xl md:text-8xl text-cream leading-[0.95] text-balance">
-          Your <em className="text-gradient-ember italic">quietest</em><br />
-          hour is waiting.
+          Catch the <em className="text-gradient-ember italic">calm</em><br />
+          before it's gone.
         </h2>
         <p className="mt-8 max-w-lg mx-auto text-muted-foreground text-lg">
-          Reservations open daily until 11:30 pm. Walk-ins welcome, but the good hours go quickly.
+          Reservations open daily until 11:30 pm. Walk-ins welcome — but like the best spots on the sand, the good hours go first.
         </p>
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
@@ -516,9 +529,163 @@ function Footer() {
         <div className="font-display normal-case tracking-widest text-cream text-lg">
           Premier<span className="text-gradient-ember px-0.5">·</span>Spa & Aesthetics
         </div>
-        <div>© {new Date().getFullYear()} · Made in Tbilisi with slow hands</div>
+        <div>© {new Date().getFullYear()} · Made in Tbilisi, tuned to the tide</div>
       </div>
     </footer>
+  );
+}
+
+const WAVE_PATH =
+  "M0,64 C266,96 533,32 800,64 C1066,96 1333,32 1600,64 L1600,100 L0,100 Z";
+
+function WaveDivider({ flip = false, bare = false }: { flip?: boolean; bare?: boolean }) {
+  return (
+    <div
+      aria-hidden
+      className={`relative h-14 md:h-20 overflow-hidden pointer-events-none ${flip ? "rotate-180" : ""} ${bare ? "" : "-my-px"}`}
+    >
+      <svg
+        className="wave-track"
+        style={{ animationDuration: "22s" }}
+        viewBox="0 0 1600 100"
+        preserveAspectRatio="none"
+      >
+        <path d={WAVE_PATH} fill="oklch(0.68 0.17 195 / 0.08)" />
+      </svg>
+      <svg
+        className="wave-track"
+        style={{ animationDuration: "14s", animationDirection: "reverse" }}
+        viewBox="0 0 1600 100"
+        preserveAspectRatio="none"
+      >
+        <path d={WAVE_PATH} fill="oklch(0.60 0.16 215 / 0.12)" />
+      </svg>
+      <svg
+        className="wave-track"
+        style={{ animationDuration: "9s" }}
+        viewBox="0 0 1600 100"
+        preserveAspectRatio="none"
+      >
+        <path d={WAVE_PATH} fill="oklch(0.82 0.13 200 / 0.10)" />
+      </svg>
+    </div>
+  );
+}
+
+const BUBBLES = Array.from({ length: 14 }, (_, i) => ({
+  left: ((i * 7.3 + 4) % 96) + 2,
+  size: 5 + ((i * 13) % 11),
+  delay: (i * 1.9) % 16,
+  duration: 12 + ((i * 5) % 9),
+}));
+
+function Bubbles() {
+  return (
+    <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
+      {BUBBLES.map((b, i) => (
+        <span
+          key={i}
+          className="bubble"
+          style={{
+            left: `${b.left}%`,
+            width: b.size,
+            height: b.size,
+            animationDelay: `${b.delay}s`,
+            animationDuration: `${b.duration}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function OceanSound() {
+  const [on, setOn] = useState(false);
+  const audioRef = useRef<{ ctx: AudioContext; master: GainNode } | null>(null);
+
+  useEffect(() => {
+    return () => {
+      audioRef.current?.ctx.close().catch(() => {});
+      audioRef.current = null;
+    };
+  }, []);
+
+  const toggle = () => {
+    if (!audioRef.current) {
+      const ctx = new AudioContext();
+      // Loop of brown noise — the closest simple synthesis to breaking surf.
+      const seconds = 6;
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < data.length; i++) {
+        const white = Math.random() * 2 - 1;
+        last = (last + 0.02 * white) / 1.02;
+        data[i] = last * 3.5;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.loop = true;
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 650;
+      // Slow LFO on gain makes the noise swell and retreat like waves.
+      const swell = ctx.createGain();
+      swell.gain.value = 0.55;
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.09;
+      const lfoDepth = ctx.createGain();
+      lfoDepth.gain.value = 0.4;
+      lfo.connect(lfoDepth);
+      lfoDepth.connect(swell.gain);
+      const master = ctx.createGain();
+      master.gain.value = 0;
+      src.connect(filter);
+      filter.connect(swell);
+      swell.connect(master);
+      master.connect(ctx.destination);
+      src.start();
+      lfo.start();
+      audioRef.current = { ctx, master };
+    }
+    const { ctx, master } = audioRef.current;
+    if (on) {
+      master.gain.setTargetAtTime(0, ctx.currentTime, 0.5);
+      setOn(false);
+    } else {
+      void ctx.resume();
+      master.gain.setTargetAtTime(0.35, ctx.currentTime, 1.2);
+      setOn(true);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={on}
+      aria-label={on ? "Mute ocean sound" : "Play ocean sound"}
+      className={`fixed bottom-6 left-6 z-40 inline-flex items-center gap-3 rounded-full border px-5 py-3 text-[10px] uppercase tracking-[0.25em] backdrop-blur-md transition-all duration-500 ${
+        on
+          ? "border-ember/70 bg-ember/15 text-cream shadow-glow"
+          : "border-cream/20 bg-background/50 text-cream/70 hover:border-ember/50 hover:text-cream"
+      }`}
+    >
+      <span className="flex items-end gap-[3px] h-3 text-ember">
+        {[0, 1, 2, 3].map((i) => (
+          <span
+            key={i}
+            className="soundbar"
+            style={{
+              animationDelay: `${i * 0.18}s`,
+              animationPlayState: on ? "running" : "paused",
+              transform: on ? undefined : "scaleY(0.3)",
+            }}
+          />
+        ))}
+      </span>
+      {on ? "Waves on" : "Hear the sea"}
+    </button>
   );
 }
 
