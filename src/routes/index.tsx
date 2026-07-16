@@ -124,8 +124,8 @@ function Nav() {
           : "bg-transparent py-6"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#top" className="font-display text-xl tracking-[0.2em] text-cream uppercase flex items-center gap-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
+        <a href="#top" className="font-display text-lg sm:text-xl tracking-[0.12em] sm:tracking-[0.2em] text-cream uppercase flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-ember shadow-[0_0_12px_var(--ember)] animate-pulse" />
           Premier<span className="text-gradient-ember px-0.5">·</span>Spa
         </a>
@@ -140,7 +140,7 @@ function Nav() {
             href={FRESHA_URL}
             target="_blank"
             rel="noreferrer"
-            className="group relative inline-flex items-center gap-2 px-5 py-2.5 text-cream text-xs uppercase tracking-[0.2em] overflow-hidden border border-ember/60 hover:border-transparent transition-all duration-500"
+            className="group relative inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 text-cream text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] overflow-hidden border border-ember/60 hover:border-transparent transition-all duration-500"
           >
             <span className="absolute inset-0 bg-[image:var(--gradient-ember)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <span className="relative">Reserve</span>
@@ -209,7 +209,7 @@ function Hero() {
             Rituals from ₾ 60 · Evenings fill first — reserve yours
           </div>
 
-          <div className="mt-16 flex items-center gap-8 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <div className="mt-16 flex items-center gap-5 sm:gap-8 text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <div>
               <div className="font-display text-4xl text-gradient-ember normal-case tracking-normal">4.7</div>
               <div className="mt-1">288 reviews</div>
@@ -228,7 +228,7 @@ function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-cream/60 animate-float">
+      <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex-col items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-cream/60 animate-float">
         <span>Scroll</span>
         <span className="h-10 w-px bg-gradient-to-b from-ember to-transparent" />
       </div>
@@ -294,7 +294,7 @@ function Services() {
               target="_blank"
               rel="noreferrer"
               data-reveal
-              className="group relative block bg-background p-10 hover:bg-secondary/40 transition-all duration-500 cursor-pointer overflow-hidden"
+              className="group relative block bg-background p-8 md:p-10 hover:bg-secondary/40 transition-all duration-500 cursor-pointer overflow-hidden"
             >
               <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl" style={{ background: "var(--gradient-ember)" }} />
               <div className="text-xs text-ember/60 tracking-[0.3em] uppercase mb-8">
@@ -363,7 +363,7 @@ function Ritual() {
             Every guest is greeted with a glass of tea. Some leave with a glass of red wine on the terrace. That's the pace.
           </p>
 
-          <div className="grid grid-cols-3 gap-8 mt-12 pt-12 border-t border-ember/20">
+          <div className="grid grid-cols-3 gap-4 md:gap-8 mt-12 pt-12 border-t border-ember/20">
             {[
               { n: "01", t: "Consultation", d: "Skin & body read" },
               { n: "02", t: "The ritual", d: "Bespoke to you" },
@@ -445,7 +445,7 @@ function Testimonials() {
 
         <div className="grid md:grid-cols-2 gap-px bg-border">
           {REVIEWS.map((r) => (
-            <blockquote key={r.name} className="bg-background p-12">
+            <blockquote key={r.name} className="bg-background p-8 md:p-12">
               <div className="text-ember text-3xl font-display leading-none mb-6">"</div>
               <p className="font-display text-2xl text-cream leading-snug mb-8 text-balance">
                 {r.quote}
@@ -665,7 +665,7 @@ function OceanSound() {
       onClick={toggle}
       aria-pressed={on}
       aria-label={on ? "Mute ocean sound" : "Play ocean sound"}
-      className={`fixed bottom-6 left-6 z-40 inline-flex items-center gap-3 rounded-full border px-5 py-3 text-[10px] uppercase tracking-[0.25em] backdrop-blur-md transition-all duration-500 ${
+      className={`fixed bottom-6 left-4 sm:left-6 z-40 inline-flex items-center gap-0 sm:gap-3 rounded-full border px-4 py-3.5 sm:px-5 sm:py-3 text-[10px] uppercase tracking-[0.25em] backdrop-blur-md transition-all duration-500 ${
         on
           ? "border-ember/70 bg-ember/15 text-cream shadow-glow"
           : "border-cream/20 bg-background/50 text-cream/70 hover:border-ember/50 hover:text-cream"
@@ -684,7 +684,7 @@ function OceanSound() {
           />
         ))}
       </span>
-      {on ? "Waves on" : "Hear the sea"}
+      <span className="hidden sm:inline">{on ? "Waves on" : "Hear the sea"}</span>
     </button>
   );
 }
@@ -702,7 +702,7 @@ function FloatingCTA() {
       target="_blank"
       rel="noreferrer"
       aria-label="Book your ritual"
-      className={`fixed bottom-6 right-6 z-40 group inline-flex items-center gap-2 px-6 py-4 text-xs uppercase tracking-[0.25em] text-primary-foreground shadow-glow rounded-full transition-all duration-500 ${
+      className={`fixed bottom-6 right-4 sm:right-6 z-40 group inline-flex items-center gap-2 px-5 sm:px-6 py-4 text-xs uppercase tracking-[0.25em] text-primary-foreground shadow-glow rounded-full transition-all duration-500 ${
         show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6 pointer-events-none"
       }`}
       style={{ background: "var(--gradient-ember)" }}
